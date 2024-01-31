@@ -93,6 +93,12 @@ func isWriteConflictError(err error) bool {
 		fmt.Println("this won't be printed:", err)
 	}
 
+	if mongoError, ok := err.(mongo.ServerError); ok {
+		if mongoError.HasErrorCode(112) {
+			fmt.Println("this works:", err)
+		}
+	}
+
 	if writeException, ok := err.(mongo.WriteException); ok {
 		fmt.Println("Error:", err)
 		for _, writeError := range writeException.WriteErrors {
